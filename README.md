@@ -1,7 +1,8 @@
 # myvelog
 ## ERD
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/ae7dbfcd-81ec-4e1a-a66e-93ee856e1f69/07bdb016-ad38-49d9-8ffa-e0562fce2ae1/Untitled.png)
+![erd](https://github.com/minyongs/myvelog/assets/91649302/07237ddc-dbe8-43f0-981c-a006c942bed3)
+
 
 ```sql
 -- Roles 
