@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Velog</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        .navbar, .footer {
+            background-color: #181818;
+        }
+        .card {
+            background-color: #282828;
+            border: none;
+            margin-bottom: 1rem;
+        }
+        .card-title {
+            color: #ffffff;
+        }
+        .card-text {
+            color: #b0b0b0;
+        }
+        .navbar-brand {
+            color: #ffffff;
+        }
+        .nav-link {
+            color: #b0b0b0;
+        }
+        .nav-link.active {
+            color: #ffffff;
+        }
+        .fa-heart, .fa-comment {
+            color: #b0b0b0;
+        }
+        .profile-menu {
+            position: relative;
+        }
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #282828;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .profile-dropdown a {
+            display: block;
+            padding: 10px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .profile-dropdown a:hover {
+            background-color: #383838;
+        }
+        .profile-menu:hover .profile-dropdown {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">velog</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#">트렌딩</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">최신</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">피드</a>
+            </li>
+            <li class="nav-item" th:if="${#authentication?.name == null}">
+                <a class="nav-link" href="/login">로그인</a>
+            </li>
+            <li class="nav-item profile-menu" th:if="${#authentication?.name != null}">
+                <img src="path/to/profile-image.jpg" class="rounded-circle" alt="Profile Image" style="width: 40px; height: 40px;">
+                <div class="profile-dropdown">
+                    <a href="#">내 벨로그</a>
+                    <a href="#">임시 글</a>
+                    <a href="#">읽기 목록</a>
+                    <a href="#">설정</a>
+                    <a href="/logout">로그아웃</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card">
+                <img src="image1.jpg" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">KT 60만명 해킹의 심각성: 사실 확인...</h5>
+                    <p class="card-text">KT가 60만 가량의 자사 인터넷을 사용하는 고객의 기기를 해킹했다는 사실이 밝혀졌습니다...</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">by lotoki</small>
+                        <div>
+                            <i class="fa fa-heart"></i> 58
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Repeat for other cards... -->
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+</body>
+</html>

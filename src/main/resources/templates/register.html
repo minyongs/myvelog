@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>회원가입 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .signup-container {
+            display: flex;
+            background-color: #181818;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 600px;
+            width: 100%;
+        }
+        .welcome-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-right: 1px solid #333;
+        }
+        .welcome-section img {
+            max-width: 100px;
+        }
+        .welcome-section h2 {
+            margin-top: 10px;
+        }
+        .signup-section {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+        }
+        .signup-section input {
+            margin-bottom: 10px;
+        }
+        .signup-section button {
+            background-color: #28a745;
+            border: none;
+            color: white;
+            padding: 10px;
+        }
+        .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .login-link a {
+            color: #28a745;
+            text-decoration: none;
+        }
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="signup-container">
+    <div class="welcome-section">
+        <img src="path/to/welcome-image.png" alt="환영합니다!">
+        <h2>환영합니다!</h2>
+    </div>
+    <div class="signup-section">
+        <h3>회원가입</h3>
+        <form id="signupForm" th:action="@{/myvelog/register}" th:object="${userDTO}" method="post">
+            <input type="text" id="username" class="form-control" th:field="*{username}" placeholder="회원 ID를 입력하세요." required>
+            <div id="usernameError" class="error-message">이미 존재하는 회원 ID입니다.</div>
+            <input type="password" id="password" class="form-control" th:field="*{password}" placeholder="비밀번호를 입력하세요." required>
+            <input type="password" id="confirmPassword" class="form-control" placeholder="비밀번호를 확인하세요." required>
+            <div id="passwordError" class="error-message">비밀번호가 일치하지 않습니다.</div>
+            <input type="email" id="email" class="form-control" th:field="*{email}" placeholder="이메일을 입력하세요." required>
+            <div id="emailError" class="error-message">이미 존재하는 이메일입니다.</div>
+            <button type="submit" class="btn btn-block">회원가입</button>
+        </form>
+        <div class="login-link">
+            이미 회원이신가요? <a th:href="@{/login}">로그인</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#username').on('blur', function() {
+            var username = $(this).val();
+            $.ajax({
+                url: '/checkUsername',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ username: username }),
+                success: function(response) {
+                    if (response.exists) {
+                        $('#usernameError').show();
+                    } else {
+                        $('#usernameError').hide();
+                    }
+                }
+            });
+        });
+
+        $('#email').on('blur', function() {
+            var email = $(this).val();
+            $.ajax({
+                url: '/checkEmail',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ email: email }),
+                success: function(response) {
+                    if (response.exists) {
+                        $('#emailError').show();
+                    } else {
+                        $('#emailError').hide();
+                    }
+                }
+            });
+        });
+
+        $('#signupForm').on('submit', function(event) {
+            var password = $('#password').val();
+            var confirmPassword = $('#confirmPassword').val();
+
+            if (password !== confirmPassword) {
+                $('#passwordError').show();
+                event.preventDefault();
+            } else {
+                $('#passwordError').hide();
+            }
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

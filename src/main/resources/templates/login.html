@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인 페이지</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            display: flex;
+            background-color: #181818;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .welcome-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-right: 1px solid #333;
+        }
+        .welcome-section img {
+            max-width: 100px;
+        }
+        .welcome-section h2 {
+            margin-top: 10px;
+        }
+        .login-section {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .login-section input {
+            margin-bottom: 10px;
+        }
+        .login-section button {
+            background-color: #28a745;
+            border: none;
+            color: white;
+            padding: 10px;
+        }
+        .social-login {
+            display: flex;
+            justify-content: space-around;
+            margin: 10px 0;
+        }
+        .social-login button {
+            background: none;
+            border: none;
+        }
+        .social-login img {
+            max-width: 40px;
+        }
+        .signup-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .signup-link a {
+            color: #28a745;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <div class="welcome-section">
+        <img src="path/to/welcome-image.png" alt="환영합니다!">
+        <h2>환영합니다!</h2>
+    </div>
+    <div class="login-section">
+        <h3>로그인</h3>
+        <form th:action="@{/login}" method="post">
+            <input type="text" class="form-control" name="username" placeholder="아이디를 입력하세요." required>
+            <input type="password" class="form-control" name="password" placeholder="비밀번호를 입력하세요." required>
+            <button type="submit" class="btn btn-block">로그인</button>
+        </form>
+        <h5 class="mt-3">소셜 계정으로 로그인</h5>
+        <div class="social-login">
+            <button><img src="path/to/github-icon.png" alt="GitHub 로그인"></button>
+            <button><img src="path/to/google-icon.png" alt="Google 로그인"></button>
+            <button><img src="path/to/facebook-icon.png" alt="Facebook 로그인"></button>
+        </div>
+        <div class="signup-link">
+            아직 회원이 아니신가요? <a th:href="@{/myvelog/register}">회원가입</a>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
