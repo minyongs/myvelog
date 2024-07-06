@@ -1,4 +1,4 @@
-package com.hellovelog.myvelog.controller;
+package com.hellovelog.myvelog.controller.user;
 
 import com.hellovelog.myvelog.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +33,7 @@ public class UserRestController {
         response.put("exists", exists);
         return ResponseEntity.ok(response);
     }
+
+
 
 }
