@@ -23,10 +23,12 @@ public class SecurityConfig {
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
+                        .logoutSuccessUrl("/myvelog")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
-                 // CSRF 보호 비활성화 (필요에 따라 활성화 가능)
+
 
         return http.build();
     }
