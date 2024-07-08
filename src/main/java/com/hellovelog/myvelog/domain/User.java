@@ -38,6 +38,9 @@ public class User {
     @Column(name = "user_role", nullable = false)
     private Role role;
 
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    private Blog blog;
+
 //    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
 //    private List<Post> posts = new ArrayList<>();
 
