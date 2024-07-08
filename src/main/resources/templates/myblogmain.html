@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>블로그</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #1E1E1E;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        nav {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: #E0E0E0;
+        }
+
+        nav ul li a.active, nav ul li a:hover {
+            color: #00C896;
+            border-bottom: 2px solid #00C896;
+        }
+
+        .container {
+            display: flex;
+            margin-top: 20px;
+        }
+
+        .tags {
+            flex: 1;
+            max-width: 200px;
+            margin-right: 20px;
+        }
+
+        .tags ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .tags ul li {
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .tags ul li a {
+            color: #E0E0E0;
+            text-decoration: none;
+        }
+
+        .tags ul li a.active {
+            color: #00C896;
+            font-weight: bold;
+        }
+
+        .content {
+            flex: 3;
+        }
+
+        article {
+            border-bottom: 1px solid #333;
+            padding: 20px 0;
+        }
+
+        article h2 {
+            font-size: 24px;
+            color: white;
+            margin: 0;
+        }
+
+        article p {
+            font-size: 16px;
+            color: #E0E0E0;
+        }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #B0B0B0;
+            margin-top: 10px;
+        }
+
+        .search {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .search input {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background-color: #1E1E1E;
+            color: #E0E0E0;
+        }
+
+        .search input::placeholder {
+            color: #888;
+        }
+
+        .profile-menu {
+            position: relative;
+        }
+
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #282828;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 10px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #383838;
+        }
+
+        .profile-menu:hover .profile-dropdown {
+            display: block;
+        }
+
+        .new-post-button {
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/myvelog">velog</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <!-- 트렌딩, 최신, 피드 링크 제거됨 -->
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item new-post-button" th:if="${loggedIn}">
+                    <button class="btn btn-outline-light" type="button" th:onclick="|location.href='@{/myvelog/write}'|">새 글 작성</button>
+                </li>
+                <li class="nav-item profile-menu" th:if="${loggedIn}">
+                    <img src="path/to/profile-image.jpg" alt="Profile Image">
+                    <div class="profile-dropdown">
+                        <a th:href="@{'/myvelog/@' + ${username}}">내 벨로그</a>
+                        <a href="#">임시 글</a>
+                        <a href="#">읽기 목록</a>
+                        <a href="#">설정</a>
+                        <form th:action="@{/logout}" method="post" style="display:inline;">
+                            <button type="submit" class="nav-link btn btn-link" style="display: inline; padding: 0; margin: 0;">로그아웃</button>
+                        </form>
+                    </div>
+                </li>
+                <li class="nav-item" th:if="${!loggedIn}">
+                    <a class="nav-link" href="/login">로그인</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<nav>
+    <ul>
+        <li><a href="#" class="active">글</a></li>
+        <li><a href="#">시리즈</a></li>
+        <li><a href="#">소개</a></li>
+    </ul>
+</nav>
+<div class="search">
+    <input type="text" placeholder="검색어를 입력하세요">
+</div>
+<div class="container">
+    <aside class="tags">
+        <ul>
+            <li><a href="#" class="active">전체보기 (20)</a></li>
+            <li><a href="#">TIL (12)</a></li>
+            <li><a href="#">백준 (3)</a></li>
+            <li><a href="#">db (3)</a></li>
+            <li><a href="#">알고리즘 (3)</a></li>
+            <li><a href="#">네트워크 (2)</a></li>
+            <li><a href="#">JPA (2)</a></li>
+            <li><a href="#">Java (2)</a></li>
+            <li><a href="#">Spring (1)</a></li>
+        </ul>
+    </aside>
+    <main class="content">
+        <article th:each="post : ${blog.posts}">
+            <h2 th:text="${post.title}">Jenkins 배포 과정</h2>
+            <p th:text="${post.content}">수동 배포개발자가 직접 서버에 접속하여 코드를 배포하는 방식이다. 자동 배포CI/CD 도구를 사용하여 코드를 자동으로 배포하는 방식이다...</p>
+            <div class="meta">
+                <span th:text="${post.createdAt}">2024년 6월 17일</span>
+                <span> · </span>
+               <!-- <span th:text="${post.comments}">0개의 댓글</span>
+                <span> · </span>
+                <span th:text="${post.likes}">♡ 0</span>-->
+            </div>
+        </article>
+        <!-- 추가적인 글 목록도 동일한 형식으로 반복해서 표시 -->
+    </main>
+</div>
+</body>
+</html>
+
