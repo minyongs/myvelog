@@ -4,12 +4,14 @@ import com.hellovelog.myvelog.domain.Role;
 import com.hellovelog.myvelog.domain.User;
 import com.hellovelog.myvelog.dto.UserDTO;
 import com.hellovelog.myvelog.repository.UserRepository;
+import com.hellovelog.myvelog.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -45,4 +47,13 @@ public class UserService {
         return userRepository.findByUserEmail(email) != null;
     }
 
+
+    @Transactional(readOnly = true)
+    public Optional<User> getCurrentUser() {
+        String username = SecurityUtil.getCurrentUsername();
+        if (username != null) {
+            return Optional.ofNullable(userRepository.findByUsername(username));
+        }
+        return Optional.empty();
+    }
 }
