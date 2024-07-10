@@ -37,6 +37,10 @@ public class UserService {
         userRepository.save(user);
         return true; // 회원가입 성공
     }
+    @Transactional(readOnly = true)
+    public User findByUserName(String username){
+        return userRepository.findByUsername(username);
+    }
 
     @Transactional(readOnly = true)
     public boolean checkUsernameExists(String username) {

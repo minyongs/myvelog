@@ -1,4 +1,4 @@
-package com.hellovelog.myvelog.controller;
+package com.hellovelog.myvelog.controller.user;
 
 import com.hellovelog.myvelog.dto.UserDTO;
 import com.hellovelog.myvelog.service.UserService;

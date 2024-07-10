@@ -132,6 +132,37 @@
             font-size: 1rem;
             color: #b0b0b0;
         }
+        .comment-section {
+            margin-top: 50px;
+        }
+        .comment {
+            margin-bottom: 30px;
+        }
+        .comment-author {
+            font-weight: bold;
+        }
+        .comment-content {
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        .comment-date {
+            font-size: 0.8rem;
+            color: #b0b0b0;
+        }
+        .reply {
+            margin-left: 30px;
+            margin-top: 10px;
+            border-left: 2px solid #444;
+            padding-left: 15px;
+        }
+        .reply-form {
+            display: none;
+            margin-top: 10px;
+        }
+        .reply-button, .toggle-replies {
+            color: #00C896;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -140,7 +171,7 @@
         <a class="navbar-brand" href="/myvelog">velog</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-                <!-- 트렌딩, 최신, 피드 링크 제거됨 -->
+
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item new-post-button" th:if="${loggedIn}">
@@ -190,10 +221,59 @@
                     <button class="like-button" th:onclick="'likePost(' + ${post.postId} + ')'">❤️</button>
                     <div class="like-count" id="like-count" th:text="${post.likeCount}">0</div>
                 </div>
-
             </div>
             <div class="alert alert-success" id="delete-success" role="alert">
                 삭제 완료되었습니다.
+            </div>
+            <div class="comment-section">
+                <h3 th:text="${comments.size()} + '개의 댓글'">댓글</h3>
+                <div class="comment-form">
+                    <form th:action="@{'/myvelog/detail/' + ${post.postId} + '/comments'}" method="post">
+                        <div class="form-group">
+                            <textarea class="form-control" name="content" placeholder="댓글을 입력하세요"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">댓글 작성</button>
+                    </form>
+                </div>
+                <div th:each="comment : ${comments}">
+                    <div class="comment">
+                        <p class="comment-author">
+                            <span th:text="${comment.username}">사용자 이름</span>
+                            <small class="comment-date" th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd')}">2024년 6월 30일</small>
+                        </p>
+                        <p class="comment-content" th:text="${comment.content}">댓글 내용</p>
+                        <div>
+                            <span class="toggle-replies" th:onclick="'toggleReplies(' + ${comment.id} + ')'" th:id="'toggle-replies-' + ${comment.id}" th:text="${comment.replies.size()} + '개의 답글 보기'"></span>
+                        </div>
+                        <div class="replies" th:id="'replies-' + ${comment.id}" style="display:none;">
+                            <div th:each="reply : ${comment.replies}" class="reply">
+                                <p class="comment-author">
+                                    <span th:text="${reply.username}">답글 작성자 이름</span>
+                                    <small class="comment-date" th:text="${#temporals.format(reply.createdAt, 'yyyy-MM-dd')}">2024년 6월 30일</small>
+                                </p>
+                                <p class="comment-content" th:text="${reply.content}">답글 내용</p>
+                            </div>
+                            <!-- 답글 작성 폼 시작 -->
+                            <div class="reply-form" th:id="'reply-form-' + ${comment.id}" style="display: none;">
+                                <form th:action="@{'/myvelog/detail/' + ${post.postId} + '/comments'}" method="post">
+                                    <input type="hidden" name="parentId" th:value="${comment.id}" />
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="content" placeholder="답글을 입력하세요"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">작성</button>
+                                    <button type="button" class="btn btn-secondary" th:onclick="'hideReplyForm(' + ${comment.id} + ')'">취소</button>
+                                </form>
+                            </div>
+                            <!-- 답글 달기 버튼 추가 -->
+                            <span class="reply-button" th:onclick="'showReplyForm(' + ${comment.id} + ')'">
+    <button class="btn btn-outline-light" style="border: 2px solid #00C896; color: #00C896; background: none;">답글 작성하기</button>
+</span>
+
+
+
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -220,7 +300,7 @@
     }
 
     function deletePost(event, postId) {
-        event.preventDefault(); // 링크 기본 동작 방지
+        event.preventDefault();
         if (confirm('정말 삭제하시겠습니까?')) {
             fetch('/postapi/delete/' + postId, {
                 method: 'DELETE'
@@ -238,6 +318,26 @@
                 .catch(error => {
                     alert('삭제 중 오류가 발생했습니다.');
                 });
+        }
+    }
+
+    function showReplyForm(commentId) {
+        document.getElementById('reply-form-' + commentId).style.display = 'block';
+    }
+
+    function hideReplyForm(commentId) {
+        document.getElementById('reply-form-' + commentId).style.display = 'none';
+    }
+
+    function toggleReplies(commentId) {
+        const replies = document.getElementById('replies-' + commentId);
+        const button = document.getElementById('toggle-replies-' + commentId);
+        if (replies.style.display === 'none' || replies.style.display === '') {
+            replies.style.display = 'block';
+            button.innerText = replies.childElementCount - 2 + '개의 답글';
+        } else {
+            replies.style.display = 'none';
+            button.innerText = replies.childElementCount - 2 + '개의 답글';
         }
     }
 </script>

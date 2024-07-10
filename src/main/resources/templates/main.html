@@ -12,17 +12,6 @@
         .navbar, .footer {
             background-color: #181818;
         }
-        .card {
-            background-color: #282828;
-            border: none;
-            margin-bottom: 1rem;
-        }
-        .card-title {
-            color: #ffffff;
-        }
-        .card-text {
-            color: #b0b0b0;
-        }
         .navbar-brand {
             color: #ffffff;
         }
@@ -30,6 +19,9 @@
             color: #b0b0b0;
         }
         .nav-link.active {
+            color: #ffffff;
+        }
+        .nav-link:hover {
             color: #ffffff;
         }
         .fa-heart, .fa-comment {
@@ -59,60 +51,132 @@
         .profile-menu:hover .profile-dropdown {
             display: block;
         }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+        .nav-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .new-post-button {
+            margin-right: 15px;
+        }
+        .navbar-nav.ml-auto {
+            display: flex;
+            align-items: center;
+        }
+        .card {
+            background-color: #1e1e1e;
+            border: none;
+            margin-bottom: 20px;
+            height: 270px;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-title {
+            color: #ffffff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-text {
+            color: #b0b0b0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 5; /* Number of lines to show */
+            -webkit-box-orient: vertical;
+        }
+        .text-muted {
+            color: #b0b0b0 !important;
+        }
+        .text-muted a {
+            color: #b0b0b0;
+            text-decoration: none;
+        }
+        .text-muted a:hover {
+            color: #ffffff;
+        }
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-content {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <a class="navbar-brand" href="#">velog</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">트렌딩</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">최신</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">피드</a>
-            </li>
-            <li class="nav-item" th:if="${#authentication?.name == null}">
-                <a class="nav-link" href="/login">로그인</a>
-            </li>
-            <li class="nav-item profile-menu" th:if="${#authentication?.name != null}">
-                <img src="path/to/profile-image.jpg" class="rounded-circle" alt="Profile Image" style="width: 40px; height: 40px;">
-                <div class="profile-dropdown">
-                    <a href="#">내 벨로그</a>
-                    <a href="#">임시 글</a>
-                    <a href="#">읽기 목록</a>
-                    <a href="#">설정</a>
-                    <a href="/logout">로그아웃</a>
-                </div>
-            </li>
-        </ul>
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">velog</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">트렌딩</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">최신</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">피드</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item new-post-button" th:if="${loggedIn}">
+                    <button class="btn btn-outline-light" type="button" th:onclick="|location.href='@{/myvelog/write}'|">새 글 작성</button>
+                </li>
+                <li class="nav-item profile-menu" th:if="${loggedIn}">
+                    <img th:src="@{/images/profile.jpg}" alt="Profile Image">
+                    <div class="profile-dropdown">
+                        <a th:href="@{'/myvelog/@' + ${username}}">내 벨로그</a>
+                        <a href="#">임시 글</a>
+                        <a href="#">읽기 목록</a>
+                        <a href="#">설정</a>
+                        <form th:action="@{/logout}" method="post" style="display:inline;">
+                            <button type="submit" class="nav-link btn btn-link" style="display: inline; padding: 0; margin: 0;">로그아웃</button>
+                        </form>
+                    </div>
+                </li>
+                <li class="nav-item" th:if="${!loggedIn}">
+                    <a class="nav-link" href="/login">로그인</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </nav>
 
 <div class="container mt-4">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-3" th:each="post : ${postDTOs}">
             <div class="card">
-                <img src="image1.jpg" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <h5 class="card-title">KT 60만명 해킹의 심각성: 사실 확인...</h5>
-                    <p class="card-text">KT가 60만 가량의 자사 인터넷을 사용하는 고객의 기기를 해킹했다는 사실이 밝혀졌습니다...</p>
+                    <div class="card-content">
+                        <h5 class="card-title">
+                            <a th:href="@{'/myvelog/detail/' + ${post.postId}}" th:text="${post.title}" style="color: #ffffff; text-decoration: none;">Post Title</a>
+                        </h5>
+                        <p class="card-text" th:text="${post.strippedContent}">Post Content</p>
+                    </div>
                     <div class="d-flex justify-content-between align-items-center">
-                        <small class="text-muted">by lotoki</small>
                         <div>
-                            <i class="fa fa-heart"></i> 58
+                            <small class="text-muted" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024년 6월 17일</small>
+                            <br>
+                            <small class="text-muted">
+                                <a th:href="@{'/myvelog/@' + ${post.author}}" th:text="'by ' + ${post.author}">by User</a>
+                            </small>
+                        </div>
+                        <div>
+                            <i class="fa fa-heart"></i> <span th:text="${post.likeCount}">0</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Repeat for other cards... -->
+        <!-- 다른 카드들도 동일한 형식으로 추가 -->
     </div>
 </div>
 

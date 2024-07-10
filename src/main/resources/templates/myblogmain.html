@@ -207,7 +207,6 @@
     </div>
 </nav>
 
-
 <nav>
     <ul>
         <li><a href="#" class="active">글</a></li>
@@ -234,12 +233,16 @@
     </aside>
     <main class="content">
         <article th:each="post : ${blog.posts}">
-            <h2 th:text="${post.title}">Jenkins 배포 과정</h2>
-            <p th:text="${post.content}">수동 배포개발자가 직접 서버에 접속하여 코드를 배포하는 방식이다. 자동 배포CI/CD 도구를 사용하여 코드를 자동으로 배포하는 방식이다...</p>
+            <h2>
+                <a th:href="@{'/myvelog/detail/' + ${post.postId}}" th:text="${post.title}">Jenkins 배포 과정</a>
+            </h2>
+            <!-- HTML 태그를 제거한 텍스트만 표시 -->
+            <p th:text="${#strings.abbreviate(post.strippedContent, 150)}">수동 배포개발자가 직접 서버에 접속하여 코드를 배포하는 방식이다. 자동 배포CI/CD 도구를 사용하여 코드를 자동으로 배포하는 방식이다...</p>
+
             <div class="meta">
-                <span th:text="${post.createdAt}">2024년 6월 17일</span>
+                <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024년 6월 17일</span>
                 <span> · </span>
-               <!-- <span th:text="${post.comments}">0개의 댓글</span>
+                <!-- <span th:text="${post.comments}">0개의 댓글</span>
                 <span> · </span>
                 <span th:text="${post.likes}">♡ 0</span>-->
             </div>
@@ -249,4 +252,3 @@
 </div>
 </body>
 </html>
-
