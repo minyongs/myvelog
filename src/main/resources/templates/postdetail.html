@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Velog - Post Detail</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        .navbar, .footer {
+            background-color: #181818;
+        }
+        .navbar-brand {
+            color: #ffffff;
+        }
+        .nav-link {
+            color: #b0b0b0;
+        }
+        .nav-link.active {
+            color: #ffffff;
+        }
+        .nav-link:hover {
+            color: #ffffff;
+        }
+        .profile-menu {
+            position: relative;
+        }
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #282828;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .profile-dropdown a {
+            display: block;
+            padding: 10px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .profile-dropdown a:hover {
+            background-color: #383838;
+        }
+        .profile-menu:hover .profile-dropdown {
+            display: block;
+        }
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+        .nav-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .new-post-button {
+            margin-right: 15px;
+        }
+        .navbar-nav.ml-auto {
+            display: flex;
+            align-items: center;
+        }
+        .container {
+            margin-top: 30px;
+        }
+        .post-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+        .post-content {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .post-actions {
+            margin-left: 10px;
+        }
+        .post-actions a {
+            color: #b0b0b0;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+        .post-actions a:hover {
+            color: #ffffff;
+        }
+        .sidebar {
+            margin-top: 30px;
+            background-color: #181818;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .sidebar h5 {
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: #b0b0b0;
+            text-decoration: none;
+        }
+        .sidebar ul li a:hover {
+            color: #ffffff;
+        }
+        .alert {
+            display: none;
+            margin-top: 20px;
+        }
+        .like-button {
+            color: #ffffff;
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .like-count {
+            font-size: 1rem;
+            color: #b0b0b0;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/myvelog">velog</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <!-- 트렌딩, 최신, 피드 링크 제거됨 -->
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item new-post-button" th:if="${loggedIn}">
+                    <button class="btn btn-outline-light" type="button" th:onclick="|location.href='@{/myvelog/write}'|">새 글 작성</button>
+                </li>
+                <li class="nav-item profile-menu" th:if="${loggedIn}">
+                    <img src="path/to/profile-image.jpg" alt="Profile Image">
+                    <div class="profile-dropdown">
+                        <a th:href="@{'/myvelog/@' + ${username}}">내 벨로그</a>
+                        <a href="#">임시 글</a>
+                        <a href="#">읽기 목록</a>
+                        <a href="#">설정</a>
+                        <form th:action="@{/logout}" method="post" style="display:inline;">
+                            <button type="submit" class="nav-link btn btn-link" style="display: inline; padding: 0; margin: 0;">로그아웃</button>
+                        </form>
+                    </div>
+                </li>
+                <li class="nav-item" th:if="${!loggedIn}">
+                    <a class="nav-link" href="/login">로그인</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="post-detail">
+                <h1 class="post-title" th:text="${post.title}">Jenkins 배포 과정</h1>
+                <div class="post-meta">
+                    <div>
+                        <span th:text="${post.author}">미녕</span>
+                        <span> · </span>
+                        <small class="text-muted" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024년 6월 17일</small>
+                    </div>
+                    <div class="post-actions" th:if="${loggedInUser == post.author}">
+                        <a href="#">통계</a>
+                        <a href="#">수정</a>
+                        <a href="javascript:void(0);" th:onclick="'deletePost(event, ' + ${post.postId} + ')'">삭제</a>
+                    </div>
+                </div>
+                <div class="post-content" th:utext="${post.content}">
+                    <p>배포의 종류...</p>
+                </div>
+                <div class="post-actions" th:if="${loggedInUser != post.author}">
+                    <button class="like-button" th:onclick="'likePost(' + ${post.postId} + ')'">❤️</button>
+                    <div class="like-count" id="like-count" th:text="${post.likeCount}">0</div>
+                </div>
+
+            </div>
+            <div class="alert alert-success" id="delete-success" role="alert">
+                삭제 완료되었습니다.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function likePost(postId) {
+        fetch('/postapi/like/' + postId, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('좋아요 처리 중 오류가 발생했습니다.');
+                }
+            })
+            .then(data => {
+                document.getElementById('like-count').innerText = data.likeCount;
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    }
+
+    function deletePost(event, postId) {
+        event.preventDefault(); // 링크 기본 동작 방지
+        if (confirm('정말 삭제하시겠습니까?')) {
+            fetch('/postapi/delete/' + postId, {
+                method: 'DELETE'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('delete-success').style.display = 'block';
+                        setTimeout(function() {
+                            window.location.href = '/myvelog';
+                        }, 2000);
+                    } else {
+                        alert('삭제 중 오류가 발생했습니다.');
+                    }
+                })
+                .catch(error => {
+                    alert('삭제 중 오류가 발생했습니다.');
+                });
+        }
+    }
+</script>
+</body>
+</html>
