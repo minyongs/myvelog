@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @Table(name = "users")
 @AllArgsConstructor
-public class User {
+public class User extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,8 +58,5 @@ public class User {
         this.registrationDate = registrationDate;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.registrationDate = LocalDateTime.now();
-    }
+
 }

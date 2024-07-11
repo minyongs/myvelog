@@ -3,12 +3,16 @@ package com.hellovelog.myvelog.service;
 import com.hellovelog.myvelog.domain.Role;
 import com.hellovelog.myvelog.domain.User;
 import com.hellovelog.myvelog.dto.UserDTO;
+import com.hellovelog.myvelog.exception.customException.DuplicateUserException;
 import com.hellovelog.myvelog.repository.UserRepository;
 import com.hellovelog.myvelog.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -22,20 +26,23 @@ public class UserService {
 
     @Transactional
     public boolean saveUser(UserDTO userDTO) {
-        if (userRepository.findByUsername(userDTO.getUsername()) != null || userRepository.findByUserEmail(userDTO.getEmail()) != null) {
-            return false; // 중복된 사용자 ID 또는 이메일이 있는 경우
-        }
+       try {
+           if(userRepository.existsByUsernameOrEmail(userDTO.getUsername(),userDTO.getEmail())){
+               throw new DuplicateUserException("중복된 사용자 이름 또는 이메일이 존재합니다.");
+           }
+           User user = User.builder()
+                   .username(userDTO.getUsername())
+                   .password(passwordEncoder.encode(userDTO.getPassword()))
+                   .userEmail(userDTO.getEmail())
+                   .registrationDate(LocalDateTime.now())
+                   .role(Role.USER) //admin 은 따로 지정
+                   .build();
 
-        User user = User.builder()
-                .username(userDTO.getUsername())
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .userEmail(userDTO.getEmail())
-                .registrationDate(LocalDateTime.now())
-                .role(Role.USER) // 기본 역할 설정
-                .build();
-
-        userRepository.save(user);
-        return true; // 회원가입 성공
+           userRepository.save(user);
+           return true;
+       }catch (DataIntegrityViolationException e){
+           return false;
+       }
     }
     @Transactional(readOnly = true)
     public User findByUserName(String username){
@@ -60,4 +67,20 @@ public class UserService {
         }
         return Optional.empty();
     }
+
+    @Transactional
+    public  void setAuthentication(Model model, Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            model.addAttribute("loggedIn", false);
+        } else {
+            model.addAttribute("loggedIn", true);
+            Optional<User> optionalUser = getCurrentUser();
+            if (optionalUser.isPresent()) {
+                User user = optionalUser.get();
+                model.addAttribute("username", user.getUsername());
+            }
+        }
+    }
+
+
 }

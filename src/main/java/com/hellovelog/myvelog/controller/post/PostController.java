@@ -49,7 +49,7 @@ public class PostController {
 
     @GetMapping("/detail/{id}")
     public String postDetail(@PathVariable Long id, Model model, Authentication authentication, Principal principal) {
-        setAuthentication(model, authentication);
+        userService.setAuthentication(model, authentication);
         String user = principal.getName();
         model.addAttribute("loggedInUser", user);
         model.addAttribute("post", postService.getPostById(id));
@@ -65,16 +65,5 @@ public class PostController {
         return "redirect:/myvelog/detail/" + id;
     }
 
-    private void setAuthentication(Model model, Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            model.addAttribute("loggedIn", false);
-        } else {
-            model.addAttribute("loggedIn", true);
-            Optional<User> optionalUser = userService.getCurrentUser();
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                model.addAttribute("username", user.getUsername());
-            }
-        }
-    }
+
 }

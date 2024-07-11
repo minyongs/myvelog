@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @Table(name = "comments")
 @AllArgsConstructor
-public class Comment {
+public class Comment extends BaseTimeEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,16 +37,5 @@ public class Comment {
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> replies;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.createdAt = LocalDateTime.now();
-    }
 }

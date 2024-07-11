@@ -24,33 +24,12 @@ public class BlogController {
     @GetMapping("/@{username}")
     public String getUserBlog(@PathVariable String username, Model model, Authentication authentication) {
         BlogDTO blogDTO = blogService.getUserBlog(username);
-
+        userService.setAuthentication(model,authentication);
         model.addAttribute("blog", blogDTO);
         model.addAttribute("blogUsername", blogDTO.getUsername());
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication.getAuthorities().isEmpty()) {
-            model.addAttribute("loggedIn", false);
-        } else {
-            model.addAttribute("loggedIn", true);
-            Optional<User> optionalUser = userService.getCurrentUser();
-            if (optionalUser.isPresent()) {
-                User user = optionalUser.get();
-                model.addAttribute("username", user.getUsername());
-                System.out.println("====================================" + optionalUser.get().getUsername());
-            }
-        }
 
         return "myblogmain";
     }
-
-
-
-
-
-
-
-
-
-
 
 }

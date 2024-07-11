@@ -49,6 +49,6 @@ public class CommentService {
     @Transactional(readOnly = true)
     public Comment findById(Long id) {
         return commentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElseThrow(() -> new RuntimeException("댓글 찾을수 없음."));
     }
 }

@@ -1,6 +1,7 @@
 package com.hellovelog.myvelog.controller.user;
 
 import com.hellovelog.myvelog.dto.UserDTO;
+import com.hellovelog.myvelog.exception.customException.DuplicateUserException;
 import com.hellovelog.myvelog.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -25,13 +26,13 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerPost(UserDTO userDTO){
-        userDTO.setRegistrationDate(LocalDateTime.now());
-        boolean isSaved = userService.saveUser(userDTO);
-        if (isSaved) {
-            return "redirect:/login"; // 회원가입이 성공하면 로그인 페이지로 리다이렉트
-        } else {
-            return "register"; // 회원가입이 실패하면 다시 회원가입 페이지로 이동
+    public String registerUser(UserDTO userDTO, Model model) {
+        try {
+            userService.saveUser(userDTO);
+            return "redirect:/login"; // 성공 시 리디렉션
+        } catch (DuplicateUserException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error";
         }
     }
 }

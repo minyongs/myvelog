@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @Table(name = "posts")
 @AllArgsConstructor
-public class Post {
+public class Post extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +44,6 @@ public class Post {
 
     @Column(name = "image_url", length = 45)
     private String imageUrl;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
 
     private int likeCount = 0;
 

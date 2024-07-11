@@ -108,6 +108,11 @@
         .card-content {
             flex: 1;
         }
+        #loader {
+            text-align: center;
+            padding: 10px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -151,7 +156,7 @@
 </nav>
 
 <div class="container mt-4">
-    <div class="row">
+    <div class="row" id="posts">
         <div class="col-md-3" th:each="post : ${postDTOs}">
             <div class="card">
                 <div class="card-body">
@@ -176,13 +181,84 @@
                 </div>
             </div>
         </div>
-        <!-- 다른 카드들도 동일한 형식으로 추가 -->
     </div>
+    <div id="loader">Loading...</div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script>
+    let page = 0;
+    const size = 12;
+
+    function loadMorePosts() {
+        $.ajax({
+            url: 'postapi/api/posts',
+            method: 'GET',
+            data: {
+                page: page,
+                size: size
+            },
+            beforeSend: function() {
+                $('#loader').show();
+            },
+            success: function(data) {
+                console.log(data); // 응답 데이터 확인을 위한 로그 출력
+                const postsDiv = $('#posts');
+                data.content.forEach(post => {
+                    postsDiv.append(`
+                        <div class="col-md-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="card-content">
+                                        <h5 class="card-title">
+                                            <a href="/myvelog/detail/${post.postId}" style="color: #ffffff; text-decoration: none;">${post.title}</a>
+                                        </h5>
+                                        <p class="card-text">${post.strippedContent}</p>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">${new Date(post.createdAt).toLocaleDateString()}</small>
+                                            <br>
+                                            <small class="text-muted">
+                                                <a href="/myvelog/@${post.author}" style="color: #b0b0b0; text-decoration: none;">by ${post.author}</a>
+                                            </small>
+                                        </div>
+                                        <div>
+                                            <i class="fa fa-heart"></i> <span>${post.likeCount}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                });
+                if (data.last) {
+                    $(window).off('scroll', handleScroll);
+                }
+                $('#loader').hide();
+            },
+            error: function() {
+                $('#loader').hide();
+                alert('더 많은 게시물을 불러오는 데 실패했습니다.');
+            }
+        });
+    }
+
+    function handleScroll() {
+        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+            page++;
+            loadMorePosts();
+        }
+    }
+
+    $(window).on('scroll', handleScroll);
+
+    // 페이지 로드 시 초기 데이터 로드
+    $(document).ready(function() {
+        loadMorePosts();
+    });
+</script>
 </body>
 </html>

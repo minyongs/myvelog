@@ -5,13 +5,13 @@ import com.hellovelog.myvelog.domain.Like;
 import com.hellovelog.myvelog.domain.Post;
 import com.hellovelog.myvelog.domain.User;
 import com.hellovelog.myvelog.dto.PostDTO;
-import com.hellovelog.myvelog.exception.ResourceNotFoundException;
 import com.hellovelog.myvelog.repository.BlogRepository;
 import com.hellovelog.myvelog.repository.LikeRepository;
 import com.hellovelog.myvelog.repository.PostRepository;
 import com.hellovelog.myvelog.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +36,6 @@ public class PostService {
         Post post = Post.builder()
                 .title(postDTO.getTitle())
                 .content(postDTO.getContent())
-                .createdAt(LocalDateTime.now())
                 .blog(blog)
                 .temporaryPost(false)
                 .build();
@@ -51,7 +50,6 @@ public class PostService {
         Post post = Post.builder()
                 .title(postDTO.getTitle())
                 .content(postDTO.getContent())
-                .createdAt(LocalDateTime.now())
                 .blog(blog)
                 .temporaryPost(true)
                 .build();
@@ -60,11 +58,10 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostDTO> getAllPosts() {
-        return postRepository.findAllWithBlogAndUser()
-                .stream()
-                .map(PostDTO::fromEntity)
-                .collect(Collectors.toList());
+    public Page<PostDTO> getAllPosts(Pageable pageable) {
+        return postRepository.findAllWithBlogAndUser(pageable)
+                .map(PostDTO::fromEntity);
+
     }
 
     @Transactional(readOnly = true)
