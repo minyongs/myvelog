@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.time.LocalDateTime;
-//
+//최대한 서비스단으로 로직을 빼내자 !!!
 @Controller
 @RequestMapping("/myvelog")
 @RequiredArgsConstructor
