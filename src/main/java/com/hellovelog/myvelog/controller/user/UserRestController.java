@@ -13,7 +13,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 public class UserRestController {
-
+    // 서비스 단으로 로직 이동 필요
     private final UserService userService;
 
     @PostMapping("/checkUsername")
