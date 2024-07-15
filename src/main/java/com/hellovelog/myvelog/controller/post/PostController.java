@@ -1,8 +1,6 @@
 package com.hellovelog.myvelog.controller.post;
 
-import com.hellovelog.myvelog.domain.Comment;
-import com.hellovelog.myvelog.domain.Post;
-import com.hellovelog.myvelog.domain.User;
+
 import com.hellovelog.myvelog.dto.CommentDTO;
 import com.hellovelog.myvelog.dto.PostDTO;
 import com.hellovelog.myvelog.service.CommentService;
@@ -15,8 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Optional;
+
 
 @Controller
 @RequestMapping("/myvelog")
