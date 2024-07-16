@@ -45,4 +45,5 @@ public class PostRestController {
         response.put("likeCount", likeCount); // 뷰에 반환
         return ResponseEntity.ok(response);
     }
+
 }

@@ -19,7 +19,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ModelAndView handleException(Exception ex) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("errorMessage", "예기치 않은 오류가 발생했습니다. 나중에 다시 시도해주세요.");
+        modelAndView.addObject("errorMessage", ex.getMessage());
+        modelAndView.addObject("errorDetail", ex.getMessage());
         modelAndView.setViewName("error");
         return modelAndView;
     }

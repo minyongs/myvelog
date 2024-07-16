@@ -122,20 +122,20 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">트렌딩</a>
+                    <a class="nav-link active" th:href="@{/trending}">트렌딩</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">최신</a>
+                    <a class="nav-link" th:href="@{/latest}">최신</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">피드</a>
                 </li>
             </ul>
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item new-post-button" th:if="${loggedIn}">
+                <li class="nav-item new-post-button" th:if="${loggedIn != null and loggedIn}">
                     <button class="btn btn-outline-light" type="button" th:onclick="|location.href='@{/myvelog/write}'|">새 글 작성</button>
                 </li>
-                <li class="nav-item profile-menu" th:if="${loggedIn}">
+                <li class="nav-item profile-menu" th:if="${loggedIn != null and loggedIn}">
                     <img th:src="@{/images/profile.jpg}" alt="Profile Image">
                     <div class="profile-dropdown">
                         <a th:href="@{'/myvelog/@' + ${username}}">내 벨로그</a>
@@ -147,8 +147,8 @@
                         </form>
                     </div>
                 </li>
-                <li class="nav-item" th:if="${!loggedIn}">
-                    <a class="nav-link" href="/login">로그인</a>
+                <li class="nav-item" th:if="${loggedIn == null or !loggedIn}">
+                    <a class="nav-link" th:href="@{/login}">로그인</a>
                 </li>
             </ul>
         </div>
@@ -157,30 +157,7 @@
 
 <div class="container mt-4">
     <div class="row" id="posts">
-        <div class="col-md-3" th:each="post : ${postDTOs}">
-            <div class="card">
-                <div class="card-body">
-                    <div class="card-content">
-                        <h5 class="card-title">
-                            <a th:href="@{'/myvelog/detail/' + ${post.postId}}" th:text="${post.title}" style="color: #ffffff; text-decoration: none;">Post Title</a>
-                        </h5>
-                        <p class="card-text" th:text="${post.strippedContent}">Post Content</p>
-                    </div>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <small class="text-muted" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024년 6월 17일</small>
-                            <br>
-                            <small class="text-muted">
-                                <a th:href="@{'/myvelog/@' + ${post.author}}" th:text="'by ' + ${post.author}">by User</a>
-                            </small>
-                        </div>
-                        <div>
-                            <i class="fa fa-heart"></i> <span th:text="${post.likeCount}">0</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <!-- 초기 데이터는 비워둡니다. -->
     </div>
     <div id="loader">Loading...</div>
 </div>
@@ -189,74 +166,87 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-    let page = 0;
-    const size = 12;
+    $(document).ready(function() {
+        $('.nav-link').on('click', function(event) {
+            event.preventDefault();
+            var targetUrl = $(this).attr('href');
+            window.location.href = targetUrl;
+        });
 
-    function loadMorePosts() {
-        $.ajax({
-            url: 'postapi/api/posts',
-            method: 'GET',
-            data: {
-                page: page,
-                size: size
-            },
-            beforeSend: function() {
-                $('#loader').show();
-            },
-            success: function(data) {
-                console.log(data); // 응답 데이터 확인을 위한 로그 출력
-                const postsDiv = $('#posts');
-                data.content.forEach(post => {
-                    postsDiv.append(`
-                        <div class="col-md-3">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="card-content">
-                                        <h5 class="card-title">
-                                            <a href="/myvelog/detail/${post.postId}" style="color: #ffffff; text-decoration: none;">${post.title}</a>
-                                        </h5>
-                                        <p class="card-text">${post.strippedContent}</p>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <small class="text-muted">${new Date(post.createdAt).toLocaleDateString()}</small>
-                                            <br>
-                                            <small class="text-muted">
-                                                <a href="/myvelog/@${post.author}" style="color: #b0b0b0; text-decoration: none;">by ${post.author}</a>
-                                            </small>
+        let page = 0;
+        const size = 12;
+        let isLoading = false;
+
+        function loadMorePosts() {
+            if (isLoading) return;
+            isLoading = true;
+
+            $.ajax({
+                url: '/postapi/api/posts',
+                method: 'GET',
+                data: {
+                    page: page,
+                    size: size
+                },
+                beforeSend: function() {
+                    $('#loader').show();
+                },
+                success: function(data) {
+                    console.log(data); // 응답 데이터 확인을 위한 로그 출력
+                    const postsDiv = $('#posts');
+                    data.content.forEach(post => {
+                        postsDiv.append(`
+                            <div class="col-md-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="card-content">
+                                            <h5 class="card-title">
+                                                <a href="/myvelog/detail/${post.postId}" style="color: #ffffff; text-decoration: none;">${post.title}</a>
+                                            </h5>
+                                            <p class="card-text">${post.strippedContent}</p>
                                         </div>
-                                        <div>
-                                            <i class="fa fa-heart"></i> <span>${post.likeCount}</span>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <small class="text-muted">${new Date(post.createdAt).toLocaleDateString()}</small>
+                                                <small class="text-muted">${post.commentCount} 댓글</small>
+                                                <br>
+                                                <small class="text-muted">
+                                                    <a href="/myvelog/@${post.author}" style="color: #b0b0b0; text-decoration: none;">by ${post.author}</a>
+                                                </small>
+                                            </div>
+                                            <div>
+                                                <i class="fa fa-heart"></i> <span>${post.likeCount}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    `);
-                });
-                if (data.last) {
-                    $(window).off('scroll', handleScroll);
+                        `);
+                    });
+                    if (data.last) {
+                        $(window).off('scroll', handleScroll);
+                    }
+                    $('#loader').hide();
+                    isLoading = false;
+                },
+                error: function() {
+                    $('#loader').hide();
+                    alert('더 많은 게시물을 불러오는 데 실패했습니다.');
+                    isLoading = false;
                 }
-                $('#loader').hide();
-            },
-            error: function() {
-                $('#loader').hide();
-                alert('더 많은 게시물을 불러오는 데 실패했습니다.');
-            }
-        });
-    }
-
-    function handleScroll() {
-        if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
-            page++;
-            loadMorePosts();
+            });
         }
-    }
 
-    $(window).on('scroll', handleScroll);
+        function handleScroll() {
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100) {
+                page++;
+                loadMorePosts();
+            }
+        }
 
-    // 페이지 로드 시 초기 데이터 로드
-    $(document).ready(function() {
+        $(window).on('scroll', handleScroll);
+
+        // 페이지 로드 시 초기 데이터 로드
         loadMorePosts();
     });
 </script>

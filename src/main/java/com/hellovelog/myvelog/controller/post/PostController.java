@@ -1,6 +1,7 @@
 package com.hellovelog.myvelog.controller.post;
 
 
+import com.hellovelog.myvelog.domain.Post;
 import com.hellovelog.myvelog.dto.CommentDTO;
 import com.hellovelog.myvelog.dto.PostDTO;
 import com.hellovelog.myvelog.service.CommentService;
@@ -61,6 +62,21 @@ public class PostController {
         commentService.addComment(id, commentDTO, principal.getName());
         return "redirect:/myvelog/detail/" + id;
     }
+
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model){
+        PostDTO postDTO = postService.getPostById(id);
+        model.addAttribute("post",postDTO);
+        return "editForm";
+
+    }
+
+    @PutMapping("/edit/{id}")
+    public String editPost(@PathVariable Long id,@ModelAttribute PostDTO postDTO){
+        postService.editPost(id,postDTO);
+        return "redirect:/detail/" + id;
+    }
+
 
 
 }

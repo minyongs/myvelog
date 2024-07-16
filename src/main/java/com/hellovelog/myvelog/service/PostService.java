@@ -80,19 +80,44 @@ public class PostService {
         User user = userRepository.findByUsername(username);
         Post post = postRepository.findByIdWithBlogAndUser(postId);
 
-
         Optional<Like> likeOpt = likeRepository.findByUserAndPost(user, post);
         if (likeOpt.isPresent()) {
             likeRepository.delete(likeOpt.get());
             post.setLikeCount(post.getLikeCount() - 1);
         } else {
-            Like like = new Like();
-            like.setUser(user);
-            like.setPost(post);
+            Like like = Like.builder()
+                    .user(user)
+                    .post(post)
+                    .build();
             likeRepository.save(like);
             post.setLikeCount(post.getLikeCount() + 1);
         }
         postRepository.save(post);
         return post.getLikeCount();
     }
+
+
+    @Transactional
+    public void editPost(Long id, PostDTO postDTO) {
+        Optional<Post> optionalPost = postRepository.findById(id);
+        if (optionalPost.isPresent()) {
+            Post post = optionalPost.get();
+            post.setTitle(postDTO.getTitle());
+            post.setContent(postDTO.getContent());
+            postRepository.save(post);
+        } else {
+            throw new RuntimeException("게시물 찾을 수 없음" + id);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostDTO> getTrendingPosts(LocalDateTime startDate, Pageable pageable) {
+        return postRepository.findTrendingPosts(startDate, pageable).map(PostDTO::fromEntity);
+    }
+    @Transactional(readOnly = true)
+    public Page<PostDTO> getLatestPosts(Pageable pageable) {
+        return postRepository.findLatestPosts(pageable).map(PostDTO::fromEntity);
+    }
+
+
 }

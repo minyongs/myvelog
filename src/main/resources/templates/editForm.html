@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>글 작성</title>
+    <title>글 수정</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <style>
@@ -29,7 +29,7 @@
             background-color: #121212;
             color: #b0b0b0;
             border: none;
-            height: 70vh;
+            height: 80vh;
             padding: 10px;
             overflow-y: auto;
         }
@@ -68,15 +68,16 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
-            <form id="postForm" th:action="@{/myvelog/write}" th:object="${post}" method="post">
+            <form id="postForm" th:action="@{/myvelog/edit/{id}(id=${post.postId})}" th:object="${post}" method="post">
+                <input type="hidden" id="postId" th:value="${post.postId}">
                 <input type="text" class="title-input" th:field="*{title}" placeholder="제목을 입력하세요" required>
-                <div id="editor" class="editor-container"></div>
+                <div id="editor" class="editor-container" th:text="${post.strippedContent}"></div>
                 <textarea id="content" name="content" style="display:none;"></textarea> <!-- 변환된 HTML을 위한 숨겨진 필드 -->
 
                 <div class="footer-buttons">
                     <button type="button" class="exit-button" onclick="window.location.href='/myvelog'">나가기</button>
-                    <button type="submit" class="save-button" name="action" value="draft">임시저장</button>
-                    <button type="submit" class="save-button" name="action" value="publish">출간하기</button>
+                    <button type="button" class="save-button" name="action" value="draft" onclick="submitForm('draft')">임시저장</button>
+                    <button type="button" class="save-button" name="action" value="publish" onclick="submitForm('publish')">수정하기</button>
                 </div>
             </form>
         </div>
@@ -95,11 +96,18 @@
         theme: 'snow',
         modules: {
             toolbar: [
-                [{ 'header': [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                [{ 'color': [] }, { 'background': [] }],
-                ['link', 'image'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }]
+                [{ 'font': [] }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+                [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                [{ 'direction': 'rtl' }],                         // text direction
+                [{ 'align': [] }],
+                ['link', 'image', 'video'],
+                ['clean']                                         // remove formatting button
             ]
         }
     });
@@ -117,10 +125,28 @@
         previewContent.innerHTML = quill.root.innerHTML;
     });
 
-    document.getElementById('postForm').addEventListener('submit', function(event) {
+    function submitForm(action) {
         var contentTextArea = document.getElementById('content');
-        contentTextArea.value = quill.root.innerHTML; // Quill 에디터의 HTML 내용을 숨겨진 필드에 설정
-    });
+        contentTextArea.value = quill.root.innerHTML;
+
+        var formData = new FormData(document.getElementById('postForm'));
+        formData.append('action', action);
+
+        var postId = document.getElementById('postId').value;
+
+        fetch(`/myvelog/edit/${postId}`, {
+            method: 'PUT',
+            body: formData
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = `/myvelog/detail/${postId}`;
+            } else {
+                alert('수정 실패');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+        });
+    }
 </script>
 </body>
 </html>
