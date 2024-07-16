@@ -13,7 +13,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Controller
@@ -36,5 +38,25 @@ public class MainController {
     @GetMapping("/login")
     public String loginPage() {
         return "login"; // login.html 템플릿을 반환
+    }
+
+    @GetMapping("/trending")
+    public String getTrendingPosts(Model model, @RequestParam(defaultValue = "0") int page,Authentication authentication) {
+        userService.setAuthentication(model,authentication);
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<PostDTO> postPage = postService.getTrendingPosts(LocalDateTime.now().minusWeeks(1), pageable);
+        model.addAttribute("postDTOs", postPage.getContent());
+        model.addAttribute("totalPages", postPage.getTotalPages());
+        return "main";
+    }
+
+    @GetMapping("/latest")
+    public String getLatestPosts(Model model, @RequestParam(defaultValue = "0") int page,Authentication authentication) {
+        userService.setAuthentication(model,authentication);
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<PostDTO> postPage = postService.getLatestPosts(pageable);
+        model.addAttribute("postDTOs", postPage.getContent());
+        model.addAttribute("totalPages", postPage.getTotalPages());
+        return "main";
     }
 }
