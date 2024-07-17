@@ -6,10 +6,14 @@ spring:
     username: root
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB # 최대 파일 크기 설정
+      max-request-size: 10MB # 최대 요청 크기 설정
 
-
+file:
+  upload-dir: C:/Users/styli/OneDrive/바탕 화면/velogimages

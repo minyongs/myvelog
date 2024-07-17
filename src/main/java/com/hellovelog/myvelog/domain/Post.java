@@ -3,8 +3,9 @@ package com.hellovelog.myvelog.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -39,11 +40,17 @@ public class Post extends BaseTimeEntity {
     @Column(name = "temporary_post")
     private Boolean temporaryPost;
 
+    @Column(name = "thumbnail_url")
+    private String thumbnailUrl;
+
+    @Column(name = "visibility", nullable = false)
+    private String visibility;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    @Column(name = "image_url", length = 45)
-    private String imageUrl;
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<PostTag> postTags = new HashSet<>();
 
     private int likeCount = 0;
 

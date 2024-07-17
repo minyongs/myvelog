@@ -1,0 +1,168 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #E0E0E0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #1E1E1E;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+}
+
+.user-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+nav {
+    margin-top: 20px;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: #E0E0E0;
+}
+
+nav ul li a.active, nav ul li a:hover {
+    color: #00C896;
+    border-bottom: 2px solid #00C896;
+}
+
+.container {
+    display: flex;
+    margin-top: 20px;
+}
+
+.tags {
+    flex: 1;
+    max-width: 200px;
+    margin-right: 20px;
+}
+
+.tags ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.tags ul li {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.tags ul li a {
+    color: #E0E0E0;
+    text-decoration: none;
+}
+
+.tags ul li a.active {
+    color: #00C896;
+    font-weight: bold;
+}
+
+.content {
+    flex: 3;
+}
+
+article {
+    border-bottom: 1px solid #333;
+    padding: 20px 0;
+}
+
+article h2 {
+    font-size: 24px;
+    color: white;
+    margin: 0;
+}
+
+article p {
+    font-size: 16px;
+    color: #E0E0E0;
+}
+
+.meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #B0B0B0;
+    margin-top: 10px;
+}
+
+.search {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.search input {
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
+}
+
+.search input::placeholder {
+    color: #888;
+}
+
+.profile-menu {
+    position: relative;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #282828;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.profile-dropdown a {
+    display: block;
+    padding: 10px;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.profile-dropdown a:hover {
+    background-color: #383838;
+}
+
+.profile-menu:hover .profile-dropdown {
+    display: block;
+}
+
+.new-post-button {
+    margin-right: 15px;
+}

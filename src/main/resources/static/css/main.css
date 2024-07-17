@@ -1,0 +1,115 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+}
+.navbar, .footer {
+    background-color: #181818;
+}
+.navbar-brand {
+    color: #ffffff;
+}
+.nav-link {
+    color: #b0b0b0;
+}
+.nav-link.active {
+    color: #ffffff;
+}
+.nav-link:hover {
+    color: #ffffff;
+}
+.fa-heart, .fa-comment {
+    color: #b0b0b0;
+}
+.profile-menu {
+    position: relative;
+}
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #282828;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+.profile-dropdown a {
+    display: block;
+    padding: 10px;
+    color: #ffffff;
+    text-decoration: none;
+}
+.profile-dropdown a:hover {
+    background-color: #383838;
+}
+.profile-menu:hover .profile-dropdown {
+    display: block;
+}
+.navbar-nav {
+    display: flex;
+    align-items: center;
+}
+.nav-item img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.new-post-button {
+    margin-right: 15px;
+}
+.navbar-nav.ml-auto {
+    display: flex;
+    align-items: center;
+}
+.card {
+    background-color: #1e1e1e;
+    border: none;
+    margin-bottom: 20px;
+    height: 270px; /* 카드 높이 고정 */
+    display: flex;
+    flex-direction: column;
+}
+.card-img-top {
+    height: 50%; /* 이미지 높이를 카드 높이의 절반으로 설정 */
+    width: 100%;
+    object-fit: cover;
+}
+.card-title {
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 13px;
+}
+.card-text {
+    color: #b0b0b0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5; /* Number of lines to show */
+    -webkit-box-orient: vertical;
+    font-size: 10px;
+}
+.text-muted {
+    color: #b0b0b0 !important;
+}
+.text-muted a {
+    color: #b0b0b0;
+    text-decoration: none;
+}
+.text-muted a:hover {
+    color: #ffffff;
+}
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.card-content {
+    flex: 1;
+}
+#loader {
+    text-align: center;
+    padding: 10px;
+    display: none;
+}

@@ -5,73 +5,29 @@
     <title>글 작성</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-        .container-fluid {
-            margin-top: 50px;
-            max-width: 100%;
-        }
-        .title-input {
-            font-size: 2rem;
-            font-weight: bold;
-            background-color: #121212;
-            color: #ffffff;
-            border: none;
-            border-bottom: 2px solid #383838;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-        .editor-container, .preview-container {
-            background-color: #121212;
-            color: #b0b0b0;
-            border: none;
-            height: 70vh;
-            padding: 10px;
-            overflow-y: auto;
-        }
-        .ql-container.ql-snow {
-            border: none;
-        }
-        .ql-toolbar.ql-snow {
-            border: none;
-        }
-        .ql-editor {
-            background-color: #121212;
-            color: #ffffff;
-        }
-        .footer-buttons {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-top: 1px solid #383838;
-        }
-        .footer-buttons button {
-            background-color: #343a40;
-            color: #ffffff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-        }
-        .footer-buttons .exit-button {
-            background-color: #6c757d;
-        }
-        .footer-buttons .save-button {
-            background-color: #20c997;
-        }
-    </style>
+    <link href="/css/write.css" rel="stylesheet">
 </head>
 <body>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
-            <form id="postForm" th:action="@{/myvelog/write}" th:object="${post}" method="post">
+            <form id="postForm" th:action="@{/myvelog/write}" th:object="${post}" method="post" enctype="multipart/form-data">
                 <input type="text" class="title-input" th:field="*{title}" placeholder="제목을 입력하세요" required>
                 <div id="editor" class="editor-container"></div>
                 <textarea id="content" name="content" style="display:none;"></textarea> <!-- 변환된 HTML을 위한 숨겨진 필드 -->
+
+                <div class="form-group">
+                    <label for="thumbnail">썸네일 이미지</label>
+                    <input type="file" class="form-control" id="thumbnail" name="thumbnailFile" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="visibility">공개 설정</label>
+                    <select class="form-control" id="visibility" name="visibility">
+                        <option value="public">공개</option>
+                        <option value="private">비공개</option>
+                    </select>
+                </div>
 
                 <div class="footer-buttons">
                     <button type="button" class="exit-button" onclick="window.location.href='/myvelog'">나가기</button>
@@ -84,43 +40,14 @@
             <div id="preview" class="preview-container">
                 <h2 id="preview-title"></h2>
                 <div id="preview-content"></div>
+                <div id="preview-thumbnail"></div>
+                <div id="preview-visibility"></div>
             </div>
         </div>
     </div>
 </div>
 
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-<script>
-    var quill = new Quill('#editor', {
-        theme: 'snow',
-        modules: {
-            toolbar: [
-                [{ 'header': [1, 2, false] }],
-                ['bold', 'italic', 'underline'],
-                [{ 'color': [] }, { 'background': [] }],
-                ['link', 'image'],
-                [{ 'list': 'ordered'}, { 'list': 'bullet' }]
-            ]
-        }
-    });
-
-    // Preview 기능 추가
-    var titleInput = document.querySelector('.title-input');
-    var previewTitle = document.getElementById('preview-title');
-    var previewContent = document.getElementById('preview-content');
-
-    titleInput.addEventListener('input', function() {
-        previewTitle.textContent = titleInput.value;
-    });
-
-    quill.on('text-change', function() {
-        previewContent.innerHTML = quill.root.innerHTML;
-    });
-
-    document.getElementById('postForm').addEventListener('submit', function(event) {
-        var contentTextArea = document.getElementById('content');
-        contentTextArea.value = quill.root.innerHTML; // Quill 에디터의 HTML 내용을 숨겨진 필드에 설정
-    });
-</script>
+<script src="/js/write.js"></script>
 </body>
 </html>

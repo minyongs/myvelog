@@ -3,6 +3,7 @@ package com.hellovelog.myvelog.dto;
 import com.hellovelog.myvelog.domain.Post;
 import com.hellovelog.myvelog.util.HtmlUtils;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +19,9 @@ public class PostDTO {
     private String title;
     private String content;
     private Boolean temporaryPost;
-    private String imageUrl;
+    private MultipartFile thumbnailFile; // 썸네일 이미지 파일
+    private String thumbnailUrl; // 썸네일 이미지 URL
+    private String visibility; // 공개/비공개 상태
     private LocalDateTime createdAt;
     private String author;
     private int likeCount;
@@ -32,7 +35,8 @@ public class PostDTO {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .temporaryPost(post.getTemporaryPost())
-                .imageUrl(post.getImageUrl())
+                .thumbnailUrl(post.getThumbnailUrl())
+                .visibility(post.getVisibility())
                 .strippedContent(HtmlUtils.stripHtml(post.getContent()))
                 .createdAt(post.getCreatedAt())
                 .author(post.getBlog().getUser().getUsername())

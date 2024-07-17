@@ -3,72 +3,12 @@
 <head>
     <title>회원가입 페이지</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .signup-container {
-            display: flex;
-            background-color: #181818;
-            padding: 20px;
-            border-radius: 10px;
-            max-width: 600px;
-            width: 100%;
-        }
-        .welcome-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            border-right: 1px solid #333;
-        }
-        .welcome-section img {
-            max-width: 100px;
-        }
-        .welcome-section h2 {
-            margin-top: 10px;
-        }
-        .signup-section {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-        }
-        .signup-section input {
-            margin-bottom: 10px;
-        }
-        .signup-section button {
-            background-color: #28a745;
-            border: none;
-            color: white;
-            padding: 10px;
-        }
-        .login-link {
-            text-align: center;
-            margin-top: 10px;
-        }
-        .login-link a {
-            color: #28a745;
-            text-decoration: none;
-        }
-        .error-message {
-            color: red;
-            display: none;
-        }
-    </style>
+    <link href="/css/register.css" rel="stylesheet">
 </head>
 <body>
 <div class="signup-container">
     <div class="welcome-section">
-        <img src="path/to/welcome-image.png" alt="환영합니다!">
+        <img src="/images/welcome.png" alt="환영합니다!">
         <h2>환영합니다!</h2>
     </div>
     <div class="signup-section">
@@ -90,55 +30,7 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('#username').on('blur', function() {
-            var username = $(this).val();
-            $.ajax({
-                url: '/checkUsername',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ username: username }),
-                success: function(response) {
-                    if (response.exists) {
-                        $('#usernameError').show();
-                    } else {
-                        $('#usernameError').hide();
-                    }
-                }
-            });
-        });
-
-        $('#email').on('blur', function() {
-            var email = $(this).val();
-            $.ajax({
-                url: '/checkEmail',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ email: email }),
-                success: function(response) {
-                    if (response.exists) {
-                        $('#emailError').show();
-                    } else {
-                        $('#emailError').hide();
-                    }
-                }
-            });
-        });
-
-        $('#signupForm').on('submit', function(event) {
-            var password = $('#password').val();
-            var confirmPassword = $('#confirmPassword').val();
-
-            if (password !== confirmPassword) {
-                $('#passwordError').show();
-                event.preventDefault();
-            } else {
-                $('#passwordError').hide();
-            }
-        });
-    });
-</script>
+<script src="/js/register.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>

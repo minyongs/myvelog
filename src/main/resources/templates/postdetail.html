@@ -4,166 +4,7 @@
     <meta charset="UTF-8">
     <title>Velog - Post Detail</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #121212;
-            color: #ffffff;
-            font-family: Arial, sans-serif;
-        }
-        .navbar, .footer {
-            background-color: #181818;
-        }
-        .navbar-brand {
-            color: #ffffff;
-        }
-        .nav-link {
-            color: #b0b0b0;
-        }
-        .nav-link.active {
-            color: #ffffff;
-        }
-        .nav-link:hover {
-            color: #ffffff;
-        }
-        .profile-menu {
-            position: relative;
-        }
-        .profile-dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: #282828;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        .profile-dropdown a {
-            display: block;
-            padding: 10px;
-            color: #ffffff;
-            text-decoration: none;
-        }
-        .profile-dropdown a:hover {
-            background-color: #383838;
-        }
-        .profile-menu:hover .profile-dropdown {
-            display: block;
-        }
-        .navbar-nav {
-            display: flex;
-            align-items: center;
-        }
-        .nav-item img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        .new-post-button {
-            margin-right: 15px;
-        }
-        .navbar-nav.ml-auto {
-            display: flex;
-            align-items: center;
-        }
-        .container {
-            margin-top: 30px;
-        }
-        .post-title {
-            font-size: 2.5rem;
-            font-weight: bold;
-        }
-        .post-meta {
-            display: flex;
-            justify-content: space-between;
-            color: #b0b0b0;
-            margin-bottom: 20px;
-        }
-        .post-content {
-            font-size: 1.1rem;
-            line-height: 1.6;
-        }
-        .post-actions {
-            margin-left: 10px;
-        }
-        .post-actions a {
-            color: #b0b0b0;
-            text-decoration: none;
-            margin-left: 10px;
-        }
-        .post-actions a:hover {
-            color: #ffffff;
-        }
-        .sidebar {
-            margin-top: 30px;
-            background-color: #181818;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .sidebar h5 {
-            margin-bottom: 15px;
-            color: #ffffff;
-        }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-        .sidebar ul li {
-            margin-bottom: 10px;
-        }
-        .sidebar ul li a {
-            color: #b0b0b0;
-            text-decoration: none;
-        }
-        .sidebar ul li a:hover {
-            color: #ffffff;
-        }
-        .alert {
-            display: none;
-            margin-top: 20px;
-        }
-        .like-button {
-            color: #ffffff;
-            border: none;
-            background: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-        .like-count {
-            font-size: 1rem;
-            color: #b0b0b0;
-        }
-        .comment-section {
-            margin-top: 50px;
-        }
-        .comment {
-            margin-bottom: 30px;
-        }
-        .comment-author {
-            font-weight: bold;
-        }
-        .comment-content {
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-        .comment-date {
-            font-size: 0.8rem;
-            color: #b0b0b0;
-        }
-        .reply {
-            margin-left: 30px;
-            margin-top: 10px;
-            border-left: 2px solid #444;
-            padding-left: 15px;
-        }
-        .reply-form {
-            display: none;
-            margin-top: 10px;
-        }
-        .reply-button, .toggle-replies {
-            color: #00C896;
-            cursor: pointer;
-        }
-    </style>
+    <link href="/css/post-detail.css" rel="stylesheet">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark">
@@ -171,7 +12,7 @@
         <a class="navbar-brand" href="/myvelog">velog</a>
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
-
+                <!-- Add your navbar items here -->
             </ul>
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item new-post-button" th:if="${loggedIn}">
@@ -199,7 +40,8 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 offset-md-2">
+
             <div class="post-detail">
                 <h1 class="post-title" th:text="${post.title}">Jenkins 배포 과정</h1>
                 <div class="post-meta">
@@ -207,11 +49,14 @@
                         <span th:text="${post.author}">미녕</span>
                         <span> · </span>
                         <small class="text-muted" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024년 6월 17일</small>
+                        <!-- 썸네일 이미지 추가 -->
+                        <div class="post-thumbnail" th:if="${post.thumbnailUrl}">
+                            <img th:src="${post.thumbnailUrl}" alt="썸네일 이미지" class="img-fluid">
+                        </div>
                     </div>
                     <div class="post-actions" th:if="${loggedInUser == post.author}">
                         <a href="#">통계</a>
                         <a th:href="@{/myvelog/edit/{id}(id=${post.postId})}">수정</a>
-
                         <a href="javascript:void(0);" th:onclick="'deletePost(event, ' + ${post.postId} + ')'">삭제</a>
                     </div>
                 </div>
@@ -267,11 +112,8 @@
                             </div>
                             <!-- 답글 달기 버튼 추가 -->
                             <span class="reply-button" th:onclick="'showReplyForm(' + ${comment.id} + ')'">
-    <button class="btn btn-outline-light" style="border: 2px solid #00C896; color: #00C896; background: none;">답글 작성하기</button>
-</span>
-
-
-
+                                <button class="btn btn-outline-light" style="border: 2px solid #00C896; color: #00C896; background: none;">답글 작성하기</button>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -280,67 +122,9 @@
     </div>
 </div>
 
-<script>
-    function likePost(postId) {
-        fetch('/postapi/like/' + postId, {
-            method: 'POST'
-        })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw new Error('좋아요 처리 중 오류가 발생했습니다.');
-                }
-            })
-            .then(data => {
-                document.getElementById('like-count').innerText = data.likeCount;
-            })
-            .catch(error => {
-                alert(error.message);
-            });
-    }
-
-    function deletePost(event, postId) {
-        event.preventDefault();
-        if (confirm('정말 삭제하시겠습니까?')) {
-            fetch('/postapi/delete/' + postId, {
-                method: 'DELETE'
-            })
-                .then(response => {
-                    if (response.ok) {
-                        document.getElementById('delete-success').style.display = 'block';
-                        setTimeout(function() {
-                            window.location.href = '/myvelog';
-                        }, 2000);
-                    } else {
-                        alert('삭제 중 오류가 발생했습니다.');
-                    }
-                })
-                .catch(error => {
-                    alert('삭제 중 오류가 발생했습니다.');
-                });
-        }
-    }
-
-    function showReplyForm(commentId) {
-        document.getElementById('reply-form-' + commentId).style.display = 'block';
-    }
-
-    function hideReplyForm(commentId) {
-        document.getElementById('reply-form-' + commentId).style.display = 'none';
-    }
-
-    function toggleReplies(commentId) {
-        const replies = document.getElementById('replies-' + commentId);
-        const button = document.getElementById('toggle-replies-' + commentId);
-        if (replies.style.display === 'none' || replies.style.display === '') {
-            replies.style.display = 'block';
-            button.innerText = replies.childElementCount - 2 + '개의 답글';
-        } else {
-            replies.style.display = 'none';
-            button.innerText = replies.childElementCount - 2 + '개의 답글';
-        }
-    }
-</script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="/js/post-detail.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

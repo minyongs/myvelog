@@ -1,0 +1,56 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+.container-fluid {
+    margin-top: 50px;
+    max-width: 100%;
+}
+.title-input {
+    font-size: 2rem;
+    font-weight: bold;
+    background-color: #121212;
+    color: #ffffff;
+    border: none;
+    border-bottom: 2px solid #383838;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.editor-container, .preview-container {
+    background-color: #121212;
+    color: #b0b0b0;
+    border: none;
+    height: 70vh;
+    padding: 10px;
+    overflow-y: auto;
+}
+.ql-container.ql-snow {
+    border: none;
+}
+.ql-toolbar.ql-snow {
+    border: none;
+}
+.ql-editor {
+    background-color: #121212;
+    color: #ffffff;
+}
+.footer-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-top: 1px solid #383838;
+}
+.footer-buttons button {
+    background-color: #343a40;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+.footer-buttons .exit-button {
+    background-color: #6c757d;
+}
+.footer-buttons .save-button {
+    background-color: #20c997;
+}
