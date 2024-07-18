@@ -11,11 +11,25 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
-            <form id="postForm" th:action="@{/myvelog/edit/{id}(id=${post.postId})}" th:object="${post}" method="post">
+            <form id="postForm" th:action="@{/myvelog/edit/{id}(id=${post.postId})}" th:object="${post}" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="_method" value="PUT">
                 <input type="hidden" id="postId" th:value="${post.postId}">
                 <input type="text" class="title-input" th:field="*{title}" placeholder="제목을 입력하세요" required>
                 <div id="editor" class="editor-container" th:text="${post.strippedContent}"></div>
-                <textarea id="content" name="content" style="display:none;"></textarea> <!-- 변환된 HTML을 위한 숨겨진 필드 -->
+                <textarea id="content" name="content" style="display:none;"></textarea>
+
+                <div class="form-group">
+                    <label for="thumbnail">썸네일 이미지</label>
+                    <input type="file" class="form-control" id="thumbnail" name="thumbnailFile" accept="image/*">
+                </div>
+
+                <div class="form-group">
+                    <label for="visibility">공개 설정</label>
+                    <select class="form-control" id="visibility" name="visibility" th:value="${post.visibility}">
+                        <option value="public">공개</option>
+                        <option value="private">비공개</option>
+                    </select>
+                </div>
 
                 <div class="footer-buttons">
                     <button type="button" class="exit-button" onclick="window.location.href='/myvelog'">나가기</button>
@@ -28,6 +42,8 @@
             <div id="preview" class="preview-container">
                 <h2 id="preview-title"></h2>
                 <div id="preview-content"></div>
+                <div id="preview-thumbnail"></div>
+                <div id="preview-visibility"></div>
             </div>
         </div>
     </div>

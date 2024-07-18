@@ -1,11 +1,15 @@
 package com.hellovelog.myvelog.dto;
 
 import com.hellovelog.myvelog.domain.Post;
+import com.hellovelog.myvelog.domain.PostTag;
 import com.hellovelog.myvelog.util.HtmlUtils;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -26,6 +30,8 @@ public class PostDTO {
     private String author;
     private int likeCount;
     private String strippedContent;
+    private Set<String> tags;
+
 
     public static PostDTO fromEntity(Post post) {
         return PostDTO.builder()
@@ -41,6 +47,9 @@ public class PostDTO {
                 .createdAt(post.getCreatedAt())
                 .author(post.getBlog().getUser().getUsername())
                 .likeCount(post.getLikeCount())
+                .tags(post.getPostTags().stream()
+                        .map(postTag -> postTag.getTags().getName())
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }

@@ -14,12 +14,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http    .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().permitAll() // 모든 요청에 대해 접근 허용
+                        .requestMatchers("/write").authenticated() // /write 경로는 인증된 사용자만 접근 허용
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
                         .defaultSuccessUrl("/myvelog", true)
-                        .permitAll() // 로그인 페이지 접근 허용
+                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -28,6 +29,7 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll()
                 );
+
 
 
         return http.build();

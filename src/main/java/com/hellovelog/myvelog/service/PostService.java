@@ -1,15 +1,9 @@
 package com.hellovelog.myvelog.service;
 
 import com.hellovelog.myvelog.config.FileStorageProperties;
-import com.hellovelog.myvelog.domain.Blog;
-import com.hellovelog.myvelog.domain.Like;
-import com.hellovelog.myvelog.domain.Post;
-import com.hellovelog.myvelog.domain.User;
+import com.hellovelog.myvelog.domain.*;
 import com.hellovelog.myvelog.dto.PostDTO;
-import com.hellovelog.myvelog.repository.BlogRepository;
-import com.hellovelog.myvelog.repository.LikeRepository;
-import com.hellovelog.myvelog.repository.PostRepository;
-import com.hellovelog.myvelog.repository.UserRepository;
+import com.hellovelog.myvelog.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +28,7 @@ public class PostService {
     private final BlogRepository blogRepository;
     private final LikeRepository likeRepository;
     private final UserRepository userRepository;
+    private final TagsRepository tagsRepository;
     private final FileStorageProperties fileStorageProperties;
 
     @Transactional
@@ -52,7 +46,26 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
+
+        // 태그 저장 로직
+        Set<PostTag> postTags = postDTO.getTags().stream().map(tagName -> {
+            Tags tag = tagsRepository.findByName(tagName);
+            if (tag == null) {
+                tag = new Tags();
+                tag.setName(tagName);
+                tagsRepository.save(tag);
+            }
+
+            PostTag postTag = new PostTag();
+            postTag.setPost(post);
+            postTag.setTags(tag);
+            return postTag;
+        }).collect(Collectors.toSet());
+
+        post.setPostTags(postTags);
+        postRepository.save(post);
     }
+
 
     @Transactional
     public void saveTemporaryPost(String username, PostDTO postDTO) {

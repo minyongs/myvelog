@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>블로그</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link href="/css/myblogmain.css" rel="stylesheet">
 </head>
 <body>
@@ -51,19 +52,19 @@
 <div class="container">
     <aside class="tags">
         <ul>
-            <li><a href="#" class="active">전체보기 (20)</a></li>
-            <li><a href="#">TIL (12)</a></li>
-            <li><a href="#">백준 (3)</a></li>
-            <li><a href="#">db (3)</a></li>
-            <li><a href="#">알고리즘 (3)</a></li>
-            <li><a href="#">네트워크 (2)</a></li>
-            <li><a href="#">JPA (2)</a></li>
-            <li><a href="#">Java (2)</a></li>
-            <li><a href="#">Spring (1)</a></li>
+            <li><a href="#" class="active">전체보기</a></li>
+            <li th:each="tag : ${allTags}">
+                <a th:text="${tag.name + ' (' + tag.count + ')'}">TIL (12)</a>
+            </li>
         </ul>
     </aside>
     <main class="content">
         <article th:each="post : ${blog.posts}">
+            <div class="post-thumbnail" th:if="${post.thumbnailUrl}">
+                <a th:href="@{'/myvelog/detail/' + ${post.postId}}">
+                    <img th:src="@{${post.thumbnailUrl}}" alt="Thumbnail Image">
+                </a>
+            </div>
             <h2>
                 <a th:href="@{'/myvelog/detail/' + ${post.postId}}" th:text="${post.title}">Jenkins 배포 과정</a>
             </h2>
@@ -72,10 +73,13 @@
 
             <div class="meta">
                 <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024년 6월 17일</span>
-                <span> · </span>
-                <!-- <span th:text="${post.comments}">0개의 댓글</span>
-                <span> · </span>
-                <span th:text="${post.likes}">♡ 0</span>-->
+                <!--<span th:text="${post.comments}">0개의 댓글</span>
+                <span> · </span>-->
+                <span th:text="'likes: ' + ${post.likeCount}">0</span>
+            </div>
+
+            <div class="post-tags">
+                <span th:each="tag : ${post.tags}" class="tag" th:text="${tag}">TIL</span>
             </div>
         </article>
         <!-- 추가적인 글 목록도 동일한 형식으로 반복해서 표시 -->

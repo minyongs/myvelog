@@ -2,6 +2,7 @@ package com.hellovelog.myvelog.controller.post;
 
 
 import com.hellovelog.myvelog.domain.Post;
+import com.hellovelog.myvelog.domain.PostTag;
 import com.hellovelog.myvelog.dto.CommentDTO;
 import com.hellovelog.myvelog.dto.PostDTO;
 import com.hellovelog.myvelog.service.CommentService;
@@ -14,6 +15,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -29,13 +33,20 @@ public class PostController {
     @GetMapping("/write")
     public String write(Model model, Principal principal) {
         model.addAttribute("post", new PostDTO());
+        System.out.println(principal.getName()+"====================================================");
         return "write";
     }
 
     @PostMapping("/write")
-    public String writePost(@ModelAttribute PostDTO postDTO, Principal principal, @RequestParam String action) {
+    public String writePost(@ModelAttribute PostDTO postDTO, Principal principal, @RequestParam String action, @RequestParam("postTags") String postTagsString) {
         String username = principal.getName();
         postDTO.setAuthor(username);
+
+        // 태그 문자열을 Set<String>으로 변환
+        Set<String> postTags = Arrays.stream(postTagsString.split(","))
+                .map(String::trim)
+                .collect(Collectors.toSet());
+        postDTO.setTags(postTags);
 
         if ("draft".equals(action)) {
             postService.saveTemporaryPost(username, postDTO);

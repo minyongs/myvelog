@@ -22,6 +22,7 @@ public class GlobalExceptionHandler {
         modelAndView.addObject("errorMessage", ex.getMessage());
         modelAndView.addObject("errorDetail", ex.getMessage());
         modelAndView.setViewName("error");
+        ex.printStackTrace();
         return modelAndView;
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 
 @Controller
@@ -24,7 +25,7 @@ public class MainController {
     private final PostService postService;
 
     @GetMapping("/myvelog")
-    public String myvelog(Model model, Authentication authentication) {
+    public String myvelog(Model model, Authentication authentication, Principal principal) {
         userService.setAuthentication(model, authentication);
         Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
         Page<PostDTO> postPage = postService.getAllPosts(pageable);

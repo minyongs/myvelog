@@ -54,3 +54,11 @@ body {
 .footer-buttons .save-button {
     background-color: #20c997;
 }
+.tag {
+    display: inline-block;
+    background-color: #343a40;
+    color: #20c997;
+    padding: 5px 10px;
+    border-radius: 15px;
+    margin: 5px 5px 0 0;
+}

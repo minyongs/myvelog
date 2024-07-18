@@ -11,10 +11,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
-            <form id="postForm" th:action="@{/myvelog/write}" th:object="${post}" method="post" enctype="multipart/form-data">
-                <input type="text" class="title-input" th:field="*{title}" placeholder="제목을 입력하세요" required>
+            <form id="postForm" action="/myvelog/write" method="post" enctype="multipart/form-data">
+                <input type="text" class="title-input" name="title" placeholder="제목을 입력하세요" required>
                 <div id="editor" class="editor-container"></div>
-                <textarea id="content" name="content" style="display:none;"></textarea> <!-- 변환된 HTML을 위한 숨겨진 필드 -->
+                <textarea id="content" name="content" style="display:none;"></textarea>
 
                 <div class="form-group">
                     <label for="thumbnail">썸네일 이미지</label>
@@ -27,6 +27,13 @@
                         <option value="public">공개</option>
                         <option value="private">비공개</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">태그</label>
+                    <input type="text" class="form-control" id="tags" placeholder="태그를 입력하세요">
+                    <div id="tag-container"></div>
+                    <input type="hidden" id="postTags" name="postTags">
                 </div>
 
                 <div class="footer-buttons">

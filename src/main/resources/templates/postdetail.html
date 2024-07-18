@@ -49,6 +49,10 @@
                         <span th:text="${post.author}">미녕</span>
                         <span> · </span>
                         <small class="text-muted" th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024년 6월 17일</small>
+                        <!-- 태그 추가 -->
+                        <div class="post-tags">
+                            <span th:each="tag : ${post.tags}" class="tag" th:text="${tag}">태그1</span>
+                        </div>
                         <!-- 썸네일 이미지 추가 -->
                         <div class="post-thumbnail" th:if="${post.thumbnailUrl}">
                             <img th:src="${post.thumbnailUrl}" alt="썸네일 이미지" class="img-fluid">
@@ -65,7 +69,9 @@
                 </div>
                 <div class="post-actions" th:if="${loggedInUser != post.author}">
                     <button class="like-button" th:onclick="'likePost(' + ${post.postId} + ')'">❤️</button>
-                    <div class="like-count" id="like-count" th:text="${post.likeCount}">0</div>
+                    <div class="like-count" id="like-count">
+                        <small class="text-muted" th:text="'likes: ' + ${post.likeCount}">likes: 0</small>
+                    </div>
                 </div>
             </div>
             <div class="alert alert-success" id="delete-success" role="alert">
