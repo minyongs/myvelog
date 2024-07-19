@@ -42,9 +42,7 @@ $(document).ready(function() {
                                             </small>
                                         </div>
                                         <div>
-                                            <i class="fa fa-heart"></i> <span th:text="'likes: ' + ${post.likeCount} + '개'" style="font-size: small;">likes: 0개</span>
-
-
+                                           <span style="font-size: small;">likes: ${post.likeCount}개</span>
                                         </div>
                                     </div>
                                 </div>

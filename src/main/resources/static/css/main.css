@@ -22,39 +22,52 @@ body {
 }
 .profile-menu {
     position: relative;
+    display: inline-block;
 }
 .profile-dropdown {
     display: none;
     position: absolute;
     right: 0;
+    top: 30px;
     background-color: #282828;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
+    z-index: 1;
+    width: 100px;
 }
 .profile-dropdown a {
     display: block;
     padding: 10px;
     color: #ffffff;
     text-decoration: none;
+    white-space: nowrap;
 }
 .profile-dropdown a:hover {
     background-color: #383838;
 }
-.profile-menu:hover .profile-dropdown {
-    display: block;
-}
-.navbar-nav {
-    display: flex;
-    align-items: center;
+.profile-menu:hover .profile-dropdown,
+.profile-menu:focus-within .profile-dropdown {
+    display: block; /* 드롭다운 메뉴가 프로필 사진이나 드롭다운 메뉴에 마우스를 올렸을 때 표시되도록 함 */
 }
 .nav-item img {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
+    cursor: pointer;
 }
 .new-post-button {
     margin-right: 15px;
+    padding: 10px 20px;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    border: none;
+}
+.new-post-button:hover {
+    background-color: #333;
 }
 .navbar-nav.ml-auto {
     display: flex;
@@ -64,12 +77,12 @@ body {
     background-color: #1e1e1e;
     border: none;
     margin-bottom: 20px;
-    height: 270px; /* 카드 높이 고정 */
+    height: 270px;
     display: flex;
     flex-direction: column;
 }
 .card-img-top {
-    height: 50%; /* 이미지 높이를 카드 높이의 절반으로 설정 */
+    height: 50%;
     width: 100%;
     object-fit: cover;
 }
@@ -85,7 +98,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 5; /* Number of lines to show */
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
     font-size: 10px;
 }

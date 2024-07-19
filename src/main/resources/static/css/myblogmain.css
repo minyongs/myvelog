@@ -19,16 +19,73 @@ header {
     color: white;
 }
 
-.user-profile {
+.profile-container {
     display: flex;
     align-items: center;
 }
 
-.user-profile img {
-    width: 40px;
-    height: 40px;
+.profile-container img {
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    margin-right: 10px;
+    cursor: pointer;
+    margin-right: 10px; /* 프로필 이미지와 사용자 이름 사이의 간격 */
+}
+
+.profile-container .username {
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.profile-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.profile-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background-color: #282828;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1;
+    width: 150px;
+}
+
+.profile-dropdown a {
+    display: block;
+    padding: 10px;
+    color: #ffffff;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.profile-dropdown a:hover {
+    background-color: #383838;
+}
+
+.profile-menu:hover .profile-dropdown,
+.profile-dropdown:hover {
+    display: block;
+}
+
+.navbar-nav .new-post-button {
+    margin-right: 15px;
+    padding: 10px 20px;
+    border: 1px solid #E0E0E0;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    border: none;
+}
+
+.navbar-nav .new-post-button:hover {
+    background-color: #333;
 }
 
 nav {
@@ -103,7 +160,7 @@ article h2 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 680px; /* 제목의 최대 너비를 썸네일과 일치 */
+    max-width: 680px;
 }
 
 article p {
@@ -114,7 +171,7 @@ article p {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 680px; /* 콘텐츠의 최대 너비를 썸네일과 일치 */
+    max-width: 680px;
 }
 
 .meta {
@@ -144,45 +201,28 @@ article p {
     color: #888;
 }
 
-.profile-menu {
-    position: relative;
-}
-
-.profile-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #282828;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.profile-dropdown a {
-    display: block;
-    padding: 10px;
-    color: #ffffff;
-    text-decoration: none;
-}
-
-.profile-dropdown a:hover {
-    background-color: #383838;
-}
-
-.profile-menu:hover .profile-dropdown {
-    display: block;
-}
-
 .new-post-button {
     margin-right: 15px;
+    padding: 10px 20px;
+    border: 1px solid #E0E0E0;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
+    cursor: pointer;
+    border-radius: 5px;
+    text-align: center;
+    border: none;
+}
+
+.new-post-button:hover {
+    background-color: #333;
 }
 
 .post-thumbnail {
     width: 100%;
-    max-width: 680px; /* 썸네일 이미지의 최대 너비 */
-    height: 300px; /* 고정된 높이 */
+    max-width: 680px;
+    height: 300px;
     overflow: hidden;
-    margin-bottom: 20px; /* 썸네일과 글 내용 사이의 간격 */
+    margin-bottom: 20px;
 }
 
 .post-thumbnail img {

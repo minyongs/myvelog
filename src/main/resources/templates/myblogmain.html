@@ -20,7 +20,10 @@
                     <button class="btn btn-outline-light" type="button" th:onclick="|location.href='@{/myvelog/write}'|">새 글 작성</button>
                 </li>
                 <li class="nav-item profile-menu" th:if="${loggedIn}">
-                    <img src="path/to/profile-image.jpg" alt="Profile Image">
+                    <div class="profile-container">
+                        <img src="/images/profile.png" alt="Profile Image">
+                        <span class="username" th:text="${username}">사용자 이름</span>
+                    </div>
                     <div class="profile-dropdown">
                         <a th:href="@{'/myvelog/@' + ${username}}">내 벨로그</a>
                         <a href="#">임시 글</a>

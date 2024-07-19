@@ -4,6 +4,7 @@ import com.hellovelog.myvelog.dto.TagCountDTO;
 import com.hellovelog.myvelog.repository.TagsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class TagService {
 
     private final TagsRepository tagsRepository;
-
+    @Transactional
     public List<TagCountDTO> findAllWithPostCount() {
         return tagsRepository.findAllWithPostCount();
     }
