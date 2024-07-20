@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-
+//
 public interface TagsRepository extends JpaRepository<Tags, Long> {
     @Query("SELECT t FROM Tags t WHERE t.name = :name")
     Tags findByName(@Param("name") String name);
